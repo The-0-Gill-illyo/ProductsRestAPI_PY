@@ -1,15 +1,13 @@
+from django.shortcuts import get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from .models import Product
 from .serializers import ProductSerializer
-from products import serializers
+from . import serializers
 
-
-@api_view (['GET', 'PSOT'])
-def product_list(request):
-     
-     
+@api_view (['GET', 'POST'])
+def product_list(request):   
      if request.method == 'GET':
           products = Product.objects.all()
           serializer = ProductSerializer(products, many=True)
@@ -20,13 +18,14 @@ def product_list(request):
           serializer.save()
           return Response(serializer.data, status=status.HTTP_201_CREATED)
 
-@api_view(['GET'])
+@api_view(['GET', 'PUT'])
 def procduct_detail(request, pk):
-     try:
-          product = Product.objects.get(pk=pk)
+     product = get_object_or_404(Product, pk=pk)
+     if request.method == 'GET':
           serializer = ProductSerializer(product)
           return Response(serializer.data)
-          
-
-     except Product.DoesNotExist:
-          return Response(status=status.HTTP_404_NOT_FOUND)
+     elif request.method == 'PUT':
+          serializer = ProductSerializer(product, data=request.data)
+          serializer.is_valid(raise_exception=True)
+          serializer.save()
+          return Response(serializer.data)
