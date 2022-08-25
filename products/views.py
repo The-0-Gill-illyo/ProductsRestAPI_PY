@@ -4,7 +4,6 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import Product
 from .serializers import ProductSerializer
-from . import serializers
 
 @api_view (['GET', 'POST'])
 def product_list(request):   
@@ -30,5 +29,5 @@ def procduct_detail(request, pk):
           serializer.save()
           return Response(serializer.data)
      elif request.method == 'DELETE':
-          product.delete()
+          product.delete() 
           return Response(status=status.HTTP_204_NO_CONTENT)
