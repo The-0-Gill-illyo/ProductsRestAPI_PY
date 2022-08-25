@@ -4,7 +4,7 @@ from .models import Product
 from .serializers import ProductSerializer
 
 
-@api_view[('GET')]
+@api_view (['GET'])
 def product_list(request):
      products = Product.objects.all()
      
